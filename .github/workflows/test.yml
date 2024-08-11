@@ -3,8 +3,7 @@ name: Test and Approve
 on: push
 
 jobs:
-   job1:
-      build:
+   build:
       runs-on: ubuntu-latest
       steps:
       - name: Checkout repository
