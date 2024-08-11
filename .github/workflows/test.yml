@@ -29,13 +29,11 @@ jobs:
           echo "passed=$passed" >> $GITHUB_OUTPUT
       
       - name: Evaluate result
-        if:  ${{ steps.count-tests.outputs.passed }} -ge 2 ] then
+        if:  ${{steps.count-tests.outputs.passed}} -ge 1 ] then
         #run: echo "Approved"
-        #run: echo ${{ steps.count-tests.outputs.passed }}
-        run: echo "approval=Approved" >> $GITHUB_OUTPUT
-
-        
+        run: echo ${{steps.count-tests.outputs.passed}}
+        #run: echo "approval=Approved" >> $GITHUB_OUTPUT
 
       - name: Notify student
-        run: echo "Student note  is ${{ steps.count-tests.outputs.passed }}/3"
+        run: echo "Student note  is ${{steps.count-tests.outputs.passed}}/3"
   
