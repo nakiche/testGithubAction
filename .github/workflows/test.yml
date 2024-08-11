@@ -21,7 +21,9 @@ jobs:
         id: run-tests
         run: |
           npm test -- --json --outputFile=test-results.json || true
-          echo test-results.json
+      
+      - name: Print Json file
+        run: echo ${{test-results.json}}
 
       - name: Count passing tests
         id: count-tests
