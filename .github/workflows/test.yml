@@ -3,31 +3,39 @@ name: Test and Approve
 on: push
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+   job1:
+      build:
+      runs-on: ubuntu-latest
+      steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '14'
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
 
-    - name: Install dependencies
-      run: npm install
+      - name: Install dependencies
+        run: npm install
 
-    - name: Run Jest tests
-      id: run-tests
-      run: |
-        npm test -- --json --outputFile=test-results.json || true
+      - name: Run Jest tests
+        id: run-tests
+        run: |
+          npm test -- --json --outputFile=test-results.json || true
 
-    - name: Count passing tests
-      id: count-tests
-      run: |
-        passed=$(jq '.numPassedTests' test-results.json)
-        echo "passed=$passed" >> $GITHUB_OUTPUT
+      - name: Count passing tests
+        id: count-tests
+        run: |
+          passed=$(jq '.numPassedTests' test-results.json)
+          echo "passed=$passed" >> $GITHUB_OUTPUT
 
-    - name: Notify student
-      run: |
-        echo "Student ${{ steps.evaluate.outputs.approval }}"
+      - name: Evaluate result
+        if:  ${{ steps.count-tests.outputs.passed }} -ge 1 ] then
+        #run: echo "Approved"
+        run: echo ${{ steps.count-tests.outputs.passed }}
+        #run: echo "approval=Approved" >> $GITHUB_OUTPUT
+        
+
+      - name: Notify student
+        run: echo "Student ${{ steps.evaluate.outputs.approval}}"
+  
