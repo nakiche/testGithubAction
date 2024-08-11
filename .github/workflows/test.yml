@@ -1,11 +1,10 @@
 name: Test and Approve
 
-on: [push]
+on: push
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
@@ -18,9 +17,17 @@ jobs:
     - name: Install dependencies
       run: npm install
 
-    - name: Run tests
+    - name: Run Jest tests
       id: run-tests
-      run : npm test
-      #run: |
-       # npm test
-        # echo "::set-output name=status::$(npm test | grep -E 'Tests:.*failed' | awk '{print $2}')"
+      run: |
+        npm test -- --json --outputFile=test-results.json || true
+
+    - name: Count passing tests
+      id: count-tests
+      run: |
+        passed=$(jq '.numPassedTests' test-results.json)
+        echo "passed=$passed" >> $GITHUB_OUTPUT
+
+    - name: Notify student
+      run: |
+        echo "Student ${{ steps.evaluate.outputs.approval }}"
