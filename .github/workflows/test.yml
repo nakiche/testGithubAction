@@ -20,6 +20,7 @@ jobs:
 
     - name: Run tests
       id: run-tests
-      run: |
-        npm test
-        echo "::set-output name=status::$(npm test | grep -E 'Tests:.*failed' | awk '{print $2}')"
+      run : npm test
+      #run: |
+       # npm test
+        # echo "::set-output name=status::$(npm test | grep -E 'Tests:.*failed' | awk '{print $2}')"
