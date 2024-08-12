@@ -43,9 +43,7 @@ jobs:
         #run: echo "approval=Approved" >> $GITHUB_OUTPUT
       - name: Make POST request with approval status
         run: |
-          curl -X POST https://httpbin.org/post
-          -H "Content-Type: application/json" \
-          -d "{\"status\": \"${{ steps.count-tests.outputs.passed }}\"}" 
+          curl -d "{\"status\": \"${{ steps.count-tests.outputs.passed }}\"}"  -X POST https://httpbin.org/post
         
       - name: Notify student
         run: echo "Student note  is ${{steps.count-tests.outputs.passed}}/${{steps.count-tests.outputs.total_tests}}"
