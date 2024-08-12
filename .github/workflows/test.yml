@@ -29,10 +29,11 @@ jobs:
           echo "passed=$passed" >> $GITHUB_OUTPUT
 
       - name: Count faling tests
-        id: count-faild-tests
+        id: count-failed-tests
         run: |
           passed=$(jq '.numFailedTests' test-results.json)
-          echo "failed=$failed" >> $GITHUB_OUTPUT          
+          echo "failed=$failed" >> $GITHUB_OUTPUT  
+          echo echo ${{ steps.count-failed-tests.outputs.failed }}
      
       - name: Evaluate result
         if:  ${{ steps.count-tests.outputs.passed }} -ge 1 
