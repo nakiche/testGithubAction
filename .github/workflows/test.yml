@@ -33,12 +33,13 @@ jobs:
         run: |
           failed=$(jq '.numFailedTests' test-results.json)
           echo "failed=$failed" >> $GITHUB_OUTPUT  
-          echo echo ${{ steps.count-failed-tests.outputs.failed }}
      
       - name: Evaluate result
         if:  ${{ steps.count-tests.outputs.passed }} -ge 1 
         #run: echo "Approved"
-        run: echo ${{ steps.count-tests.outputs.passed }}
+        run: |
+           echo ${{ steps.count-tests.outputs.passed }}
+           echo ${{ steps.count-failed-tests.outputs.failed }}
         #run: echo "approval=Approved" >> $GITHUB_OUTPUT
         
       - name: Notify student
