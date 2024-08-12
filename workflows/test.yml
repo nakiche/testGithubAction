@@ -1,0 +1,52 @@
+name: Test and Approve
+
+on: push
+
+jobs:
+   build:
+      runs-on: ubuntu-latest
+      steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Jest tests
+        id: run-tests
+        run: |
+          npm test -- --json --outputFile=test-results.json || true
+      
+      - name: Count passing tests
+        id: count-tests
+        run: |
+          passed=$(jq '.numPassedTests' test-results.json)
+          total_tests=$(jq '.numTotalTests' test-results.json)
+          echo "passed=$passed" >> $GITHUB_OUTPUT
+          echo "total_tests=$total_tests" >> $GITHUB_OUTPUT
+
+#      - name: Count faling tests
+#        id: count-failed-tests
+#        run: |
+#          failed=$(jq '.numFailedTests' test-results.json)
+#          echo "failed=$failed" >> $GITHUB_OUTPUT  
+     
+      - name: Evaluate result
+        if:  ${{ steps.count-tests.outputs.passed }} -ge 3 
+        run: echo ${{ steps.count-tests.outputs.passed }}
+        
+        #run: echo "approval=Approved" >> $GITHUB_OUTPUT
+      - name: Make POST request with approval status
+        run: |
+          curl -d "{\"status\": \"${{ steps.count-tests.outputs.passed }}\"}"  -X POST https://httpbin.org/post
+        
+      - name: Notify student
+        run: echo "Student note  is ${{steps.count-tests.outputs.passed}}/${{steps.count-tests.outputs.total_tests}}"
+      #- name: Notify student
+        #run: echo "Student note  is ${{steps.count-tests.outputs.passed}}/3"
+  
