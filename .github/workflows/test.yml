@@ -26,24 +26,24 @@ jobs:
         id: count-tests
         run: |
           passed=$(jq '.numPassedTests' test-results.json)
+          total_tests=$(jq '.numTotalTests' test-results.json)
           echo "passed=$passed" >> $GITHUB_OUTPUT
+          echo "total_tests=$total_tests" >> $GITHUB_OUTPUT
 
-      - name: Count faling tests
-        id: count-failed-tests
-        run: |
-          failed=$(jq '.numFailedTests' test-results.json)
-          echo "failed=$failed" >> $GITHUB_OUTPUT  
+#      - name: Count faling tests
+#        id: count-failed-tests
+#        run: |
+#          failed=$(jq '.numFailedTests' test-results.json)
+#          echo "failed=$failed" >> $GITHUB_OUTPUT  
      
       - name: Evaluate result
-        if:  ${{ steps.count-tests.outputs.passed }} -ge 1 
-        #run: echo "Approved"
-        run: |
-           echo ${{ steps.count-tests.outputs.passed }}
-           echo ${{ steps.count-failed-tests.outputs.failed }}
+        if:  ${{ steps.count-tests.outputs.passed }} -ge 3 
+        run: echo ${{ steps.count-tests.outputs.passed }}
+        
         #run: echo "approval=Approved" >> $GITHUB_OUTPUT
         
       - name: Notify student
-        run: echo "Student note  is ${{steps.count-tests.outputs.passed}}/3"
+        run: echo "Student note  is ${{steps.count-tests.outputs.passed}}/${{steps.count-tests.outputs.total_tests}}"
       #- name: Notify student
         #run: echo "Student note  is ${{steps.count-tests.outputs.passed}}/3"
   
