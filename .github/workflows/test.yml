@@ -31,7 +31,7 @@ jobs:
       - name: Count faling tests
         id: count-failed-tests
         run: |
-          passed=$(jq '.numFailedTests' test-results.json)
+          failed=$(jq '.numFailedTests' test-results.json)
           echo "failed=$failed" >> $GITHUB_OUTPUT  
           echo echo ${{ steps.count-failed-tests.outputs.failed }}
      
